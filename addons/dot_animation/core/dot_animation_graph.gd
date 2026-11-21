@@ -1,4 +1,4 @@
-class_name DotAnimationGraph
+class_name GSAnimationGraph
 extends RefCounted
 
 ## A state machine declared as data, validated once so a machine never meets a dangling state.
@@ -21,43 +21,43 @@ var _transitions: Array = []
 
 
 ## Builds a graph from a document. Fails loudly, naming the state or transition, on the first problem.
-static func from_dictionary(doc: Dictionary) -> DotResult:
-	var g := DotAnimationGraph.new()
+static func from_dictionary(doc: Dictionary) -> GSResult:
+	var g := GSAnimationGraph.new()
 	var raw_states: Variant = doc.get("states", {})
 	if not raw_states is Dictionary or (raw_states as Dictionary).is_empty():
-		return DotResult.fail(DotError.CODE_INVALID, "animation graph has no states")
+		return GSResult.fail(GSError.CODE_INVALID, "animation graph has no states")
 	for key: Variant in (raw_states as Dictionary):
 		var s: Dictionary = (raw_states as Dictionary)[key] if (raw_states as Dictionary)[key] is Dictionary else {}
 		var name := StringName(str(key))
 		var min_time := float(s.get("min_time", 0.0))
 		var speed := float(s.get("speed", 1.0))
 		if min_time < 0.0 or speed < 0.0:
-			return DotResult.fail(DotError.CODE_INVALID, "animation state '%s' has a negative min_time or speed" % name)
+			return GSResult.fail(GSError.CODE_INVALID, "animation state '%s' has a negative min_time or speed" % name)
 		g.states[name] = {"clip": StringName(str(s.get("clip", name))), "loop": bool(s.get("loop", true)), "min_time": min_time, "speed": speed}
 	g.initial = StringName(str(doc.get("initial", "")))
 	if not g.states.has(g.initial):
-		return DotResult.fail(DotError.CODE_INVALID, "animation graph initial state '%s' is not a state" % g.initial)
+		return GSResult.fail(GSError.CODE_INVALID, "animation graph initial state '%s' is not a state" % g.initial)
 	var order := 0
 	for raw: Variant in (doc.get("transitions", []) as Array):
 		var t: Dictionary = raw if raw is Dictionary else {}
 		var from := str(t.get("from", ""))
 		var to := StringName(str(t.get("to", "")))
 		if from != ANY and not g.states.has(StringName(from)):
-			return DotResult.fail(DotError.CODE_INVALID, "transition %d starts at unknown state '%s'" % [order, from])
+			return GSResult.fail(GSError.CODE_INVALID, "transition %d starts at unknown state '%s'" % [order, from])
 		if not g.states.has(to):
-			return DotResult.fail(DotError.CODE_INVALID, "transition %d ends at unknown state '%s'" % [order, to])
+			return GSResult.fail(GSError.CODE_INVALID, "transition %d ends at unknown state '%s'" % [order, to])
 		var conds: Array = []
 		for c: Variant in (t.get("when", []) as Array):
 			var parts: Array = c if c is Array else []
 			if parts.size() < 2 or not OPS.has(str(parts[1])):
-				return DotResult.fail(DotError.CODE_INVALID, "transition %d has a bad condition %s" % [order, str(c)])
+				return GSResult.fail(GSError.CODE_INVALID, "transition %d has a bad condition %s" % [order, str(c)])
 			var op := str(parts[1])
 			if parts.size() < 3 and not (op == "true" or op == "false" or op == "trigger"):
-				return DotResult.fail(DotError.CODE_INVALID, "transition %d condition '%s %s' needs a value" % [order, parts[0], op])
+				return GSResult.fail(GSError.CODE_INVALID, "transition %d condition '%s %s' needs a value" % [order, parts[0], op])
 			conds.append({"param": StringName(str(parts[0])), "op": op, "value": parts[2] if parts.size() > 2 else null})
 		g._transitions.append({"from": from, "to": to, "when": conds, "priority": int(t.get("priority", 0)), "blend": float(t.get("blend", -1.0)), "interrupt": bool(t.get("interrupt", false)), "exit_time": float(t.get("exit_time", 0.0)), "order": order})
 		order += 1
-	return DotResult.success(g)
+	return GSResult.success(g)
 
 
 func transition_count() -> int:

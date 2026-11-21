@@ -1,4 +1,4 @@
-class_name DotAnimationLocomotion
+class_name GSAnimationLocomotion
 extends RefCounted
 
 ## Which locomotion state a character is in, as a pure function of how it is moving.
@@ -159,10 +159,10 @@ func forget_state() -> void:
 	_was_on_floor = true
 
 
-func validate() -> DotResult:
+func validate() -> GSResult:
 	if run_exit_speed >= run_speed:
-		return DotResult.fail(
-			DotError.CODE_INVALID,
+		return GSResult.fail(
+			GSError.CODE_INVALID,
 			"The run threshold (%.2f) is not above the exit threshold (%.2f)."
 			% [run_speed, run_exit_speed],
 			"With no gap there is no hysteresis, and a player holding a stick at the "
@@ -170,13 +170,13 @@ func validate() -> DotResult:
 		)
 
 	if move_exit_speed >= move_speed:
-		return DotResult.fail(
-			DotError.CODE_INVALID,
+		return GSResult.fail(
+			GSError.CODE_INVALID,
 			"The move threshold (%.2f) is not above its exit threshold (%.2f)."
 			% [move_speed, move_exit_speed]
 		)
 
-	return DotResult.success(null)
+	return GSResult.success(null)
 
 
 func describe() -> String:
@@ -184,4 +184,4 @@ func describe() -> String:
 
 
 func _to_string() -> String:
-	return "DotAnimationLocomotion(%s)" % describe()
+	return "GSAnimationLocomotion(%s)" % describe()

@@ -1,4 +1,4 @@
-class_name DotAnimationBlend
+class_name GSAnimationBlend
 extends RefCounted
 
 ## Blend and layer rules as pure functions over clip weights, so the same numbers drive an AnimationTree, a 2D sheet or a test.
@@ -26,13 +26,13 @@ static func blend_1d(points: Array, value: float) -> Dictionary:
 
 
 ## Whether a blend space is well formed: at least one point, strictly increasing x.
-static func check_points(points: Array) -> DotResult:
+static func check_points(points: Array) -> GSResult:
 	if points.is_empty():
-		return DotResult.fail(DotError.CODE_INVALID, "blend space has no points")
+		return GSResult.fail(GSError.CODE_INVALID, "blend space has no points")
 	for i in points.size() - 1:
 		if float((points[i + 1] as Array)[0]) <= float((points[i] as Array)[0]):
-			return DotResult.fail(DotError.CODE_INVALID, "blend space points must increase in x (point %d)" % (i + 1))
-	return DotResult.success(points.size())
+			return GSResult.fail(GSError.CODE_INVALID, "blend space points must increase in x (point %d)" % (i + 1))
+	return GSResult.success(points.size())
 
 
 ## Lays an upper layer over a base: `weight` 0 is the base, 1 is the layer; both are clip to weight maps summing to 1.

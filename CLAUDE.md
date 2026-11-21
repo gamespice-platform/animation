@@ -14,14 +14,14 @@ Godot 4.7+ addon for animation: state machines declared as data, blend and layer
 ## Boundaries
 
 - Not a player: it decides which clip at what weight, an AnimationPlayer or AnimationTree does the playing.
-- Not a character, rig or clip library. `DotAnimationLocomotion` is the generic locomotion state with hysteresis (GameSpice Player Char's `DotPlayerAnimState` extends it); the clip names and presets stay in Player Char.
+- Not a character, rig or clip library. `GSAnimationLocomotion` is the generic locomotion state with hysteresis (GameSpice Player Char's `GSPlayerAnimState` extends it); the clip names and presets stay in Player Char.
 - Not an IK solver: it computes and exposes targets, the skeleton applies them.
 - No importer for clips or skeletons.
 
 ## Rules
 
-- Every limit is configurable, 0 means unlimited where a limit makes sense, and a bad value fails loudly through `DotResult`.
+- Every limit is configurable, 0 means unlimited where a limit makes sense, and a bad value fails loudly through `GSResult`.
 - Time is passed in (`now`, `delta`); core classes never read a clock.
-- Everything here is prefixed `DotAnimation`. No `uid://` paths.
+- Everything here is prefixed `GSAnimation`. No `uid://` paths.
 - Prose says GameSpice, never the internal repo prefix.
 - Run the suite with `hv`, never bare Godot. Commit with the owner's identity; never tag.

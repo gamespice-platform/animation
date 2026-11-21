@@ -1,4 +1,4 @@
-# Shipped defaults are in DotAnimationConfig; a key here overrides one.
+# Shipped defaults are in GSAnimationConfig; a key here overrides one.
 # aim_max_yaw: 80
 # aim_max_pitch: 70
 # ik_half_life: 0.05

@@ -1,12 +1,12 @@
-class_name DotAnimationMachine
+class_name GSAnimationMachine
 extends RefCounted
 
-## Runs a [DotAnimationGraph]: one current state, the transition that leaves it, and the blend from the state it left. It produces names and weights; the game or a rig adapter plays the clips, so the same machine drives a player, an NPC or a 2D sheet.
+## Runs a [GSAnimationGraph]: one current state, the transition that leaves it, and the blend from the state it left. It produces names and weights; the game or a rig adapter plays the clips, so the same machine drives a player, an NPC or a 2D sheet.
 
 signal changed(from: StringName, to: StringName)
 
-var graph: DotAnimationGraph
-var config: DotAnimationConfig
+var graph: GSAnimationGraph
+var config: GSAnimationConfig
 var current: StringName = &""
 var previous: StringName = &""
 var time_in_state: float = 0.0
@@ -16,7 +16,7 @@ var _blend_t: float = 1.0
 var _triggers: Dictionary = {}
 
 
-func _init(p_graph: DotAnimationGraph, p_config: DotAnimationConfig) -> void:
+func _init(p_graph: GSAnimationGraph, p_config: GSAnimationConfig) -> void:
 	graph = p_graph
 	config = p_config
 	current = graph.initial
@@ -53,7 +53,7 @@ func _passes(t: Dictionary, params: Dictionary) -> bool:
 	if t["to"] == current:
 		return false
 	for cond: Dictionary in (t["when"] as Array):
-		if not DotAnimationGraph.holds(cond, params, _triggers):
+		if not GSAnimationGraph.holds(cond, params, _triggers):
 			return false
 	return true
 

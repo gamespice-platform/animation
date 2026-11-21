@@ -1,13 +1,13 @@
-class_name DotAnimationFoot
+class_name GSAnimationFoot
 extends RefCounted
 
 ## Foot placement as a pure model: given where the ground was found under a foot (a ray result the caller cast), it produces the IK target height, limited to `foot_max_reach` and smoothed, and how far the hips must drop so both feet reach. No physics here: the game casts, this decides.
 
 var offset: float = 0.0
-var _cfg: DotAnimationConfig
+var _cfg: GSAnimationConfig
 
 
-func _init(cfg: DotAnimationConfig) -> void:
+func _init(cfg: GSAnimationConfig) -> void:
 	_cfg = cfg
 
 

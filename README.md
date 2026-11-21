@@ -12,29 +12,29 @@ It needs only GameSpice Core ([dot_core](https://github.com/gamespice-platform/c
 ## Quick start
 
 ```gdscript
-var cfg := DotAnimationConfig.from_files().value as DotAnimationConfig
-var graph := DotAnimationGraph.from_dictionary({
+var cfg := GSAnimationConfig.from_files().value as GSAnimationConfig
+var graph := GSAnimationGraph.from_dictionary({
 	"initial": "idle",
 	"states": {"idle": {"clip": "idle_loop"}, "run": {"clip": "run_loop", "speed": 1.5}},
 	"transitions": [
 		{"from": "idle", "to": "run", "when": [["speed", ">", 0.5]], "blend": 0.2},
 		{"from": "run", "to": "idle", "when": [["speed", "<=", 0.5]]},
 	],
-}).value as DotAnimationGraph
+}).value as GSAnimationGraph
 
-var machine := DotAnimationMachine.new(graph, cfg)
+var machine := GSAnimationMachine.new(graph, cfg)
 machine.changed.connect(func(from, to): print(from, " -> ", to))
 machine.trigger(&"jump")                             # one-shot, consumed by the first transition that wants it
 machine.tick({"speed": velocity.length()}, delta)
 var pose := machine.pose()                           # {clip, from_clip, weight, speed, loop}: feed it to your player
 
-var weights := DotAnimationBlend.blend_1d([[0.0, "idle"], [2.0, "walk"], [6.0, "run"]], speed)
+var weights := GSAnimationBlend.blend_1d([[0.0, "idle"], [2.0, "walk"], [6.0, "run"]], speed)
 var hits := notifies.fire(&"run", prev_time, now_time, looped)   # footstep and other events
 ```
 
 ## Settings
 
-Every number is a field on `DotAnimationConfig`. The values below are defaults, and the ranges are inspector slider limits, not enforced caps. Set the property from code or a config file (`cfg/addon/dot_animation/animation.yml`, `DOT_ANIMATION_*`, `--animation-*`) to go beyond them. A bad value fails loudly in `validate()`.
+Every number is a field on `GSAnimationConfig`. The values below are defaults, and the ranges are inspector slider limits, not enforced caps. Set the property from code or a config file (`cfg/addon/dot_animation/animation.yml`, `DOT_ANIMATION_*`, `--animation-*`) to go beyond them. A bad value fails loudly in `validate()`.
 
 | Setting | Default | What it does |
 | --- | --- | --- |
@@ -50,7 +50,7 @@ Every number is a field on `DotAnimationConfig`. The values below are defaults, 
 
 ## Aim, feet and playing
 
-`DotAnimationAim` clamps and smooths a look into yaw and pitch and spreads it over a bone chain; `DotAnimationFoot` turns a ground hit into a smoothed foot offset and the hip drop; `DotAnimationPlayerView` applies a machine's pose to an AnimationPlayer, calling `play` only when the clip changes. See `docs/ik.md`.
+`GSAnimationAim` clamps and smooths a look into yaw and pitch and spreads it over a bone chain; `GSAnimationFoot` turns a ground hit into a smoothed foot offset and the hip drop; `GSAnimationPlayerView` applies a machine's pose to an AnimationPlayer, calling `play` only when the clip changes. See `docs/ik.md`.
 
 ## What it is not
 

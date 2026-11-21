@@ -1,14 +1,14 @@
-class_name DotAnimationAim
+class_name GSAnimationAim
 extends RefCounted
 
 ## Aim offset as a pure model: turns a look direction into clamped, smoothed yaw and pitch, and spreads it over a chain of bones so a spine bends as a whole. The skeleton applies the numbers; nothing here touches a node.
 
 var yaw: float = 0.0
 var pitch: float = 0.0
-var _cfg: DotAnimationConfig
+var _cfg: GSAnimationConfig
 
 
-func _init(cfg: DotAnimationConfig) -> void:
+func _init(cfg: GSAnimationConfig) -> void:
 	_cfg = cfg
 
 

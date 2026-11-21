@@ -1,4 +1,4 @@
-class_name DotAnimationNotifies
+class_name GSAnimationNotifies
 extends RefCounted
 
 ## Events pinned to a clip's normalised time (footstep, hit frame, reload done), fired once as playback passes them, loops included.
@@ -7,14 +7,14 @@ var _events: Dictionary = {}
 
 
 ## Pins `name` to `time` (0 to 1) of `clip`. Fails loudly outside that range.
-func add(clip: StringName, time: float, name: StringName) -> DotResult:
+func add(clip: StringName, time: float, name: StringName) -> GSResult:
 	if time < 0.0 or time > 1.0:
-		return DotResult.fail(DotError.CODE_INVALID, "notify '%s' time %.3f is outside 0..1" % [name, time])
+		return GSResult.fail(GSError.CODE_INVALID, "notify '%s' time %.3f is outside 0..1" % [name, time])
 	var list: Array = _events.get(clip, [])
 	list.append({"t": time, "name": name})
 	list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a["t"]) < float(b["t"]))
 	_events[clip] = list
-	return DotResult.success(list.size())
+	return GSResult.success(list.size())
 
 
 func count(clip: StringName) -> int:

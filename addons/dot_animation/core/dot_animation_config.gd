@@ -1,7 +1,7 @@
-class_name DotAnimationConfig
-extends DotConfig
+class_name GSAnimationConfig
+extends GSConfig
 
-## Every tunable of GameSpice Animation. A game binds it with DotGameConfigBinder (kind `animation`); `cfg/addon/dot_animation/*.yml`, `DOT_ANIMATION_*` and `--animation-*` layer over these defaults. Ranges are inspector slider limits, not caps.
+## Every tunable of GameSpice Animation. A game binds it with GSGameConfigBinder (kind `animation`); `cfg/addon/dot_animation/*.yml`, `DOT_ANIMATION_*` and `--animation-*` layer over these defaults. Ranges are inspector slider limits, not caps.
 
 const ADDON := "dot-animation"
 
@@ -34,17 +34,17 @@ func cli_prefix() -> String:
 	return "--animation-"
 
 
-func validate() -> DotResult:
+func validate() -> GSResult:
 	for pair: Array in [["blend_time", blend_time], ["trigger_seconds", trigger_seconds], ["speed_scale", speed_scale], ["max_step", max_step], ["aim_max_yaw", aim_max_yaw], ["aim_max_pitch", aim_max_pitch], ["ik_half_life", ik_half_life], ["foot_max_reach", foot_max_reach]]:
 		if float(pair[1]) < 0.0:
-			return DotResult.fail(DotError.CODE_INVALID, "animation %s %s is negative" % [pair[0], pair[1]])
-	return DotResult.success(self)
+			return GSResult.fail(GSError.CODE_INVALID, "animation %s %s is negative" % [pair[0], pair[1]])
+	return GSResult.success(self)
 
 
 ## Defaults, then `cfg/addon/dot_animation/*.yml` and the game tier, then environment and command line.
-static func from_files() -> DotResult:
-	var cfg := DotAnimationConfig.new()
-	var files := DotAddonConfig.load_dir(ADDON)
+static func from_files() -> GSResult:
+	var cfg := GSAnimationConfig.new()
+	var files := GSAddonConfig.load_dir(ADDON)
 	if not files.ok:
 		return files
 	cfg.apply_dictionary(files.value as Dictionary, "yml")

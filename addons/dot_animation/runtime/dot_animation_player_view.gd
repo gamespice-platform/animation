@@ -1,16 +1,16 @@
-class_name DotAnimationPlayerView
+class_name GSAnimationPlayerView
 extends Node
 
-## Applies a [DotAnimationMachine] pose to an AnimationPlayer, and goes idle when nothing needs it. It calls `play` only when the clip changes, so a steady state costs one dictionary read per tick and allocates nothing. The player's own blending handles the cross-fade (`custom_blend` is the machine's blend time).
+## Applies a [GSAnimationMachine] pose to an AnimationPlayer, and goes idle when nothing needs it. It calls `play` only when the clip changes, so a steady state costs one dictionary read per tick and allocates nothing. The player's own blending handles the cross-fade (`custom_blend` is the machine's blend time).
 
 signal clip_changed(clip: StringName)
 
 var player: AnimationPlayer
-var machine: DotAnimationMachine
+var machine: GSAnimationMachine
 var _clip: StringName = &""
 
 
-func setup(p_player: AnimationPlayer, p_machine: DotAnimationMachine) -> void:
+func setup(p_player: AnimationPlayer, p_machine: GSAnimationMachine) -> void:
 	player = p_player
 	machine = p_machine
 	_clip = &""
@@ -23,7 +23,7 @@ func drive(params: Dictionary, delta: float) -> StringName:
 	var clip: StringName = pose["clip"]
 	if clip != _clip:
 		if not player.has_animation(clip):
-			push_error("DotAnimationPlayerView: AnimationPlayer has no clip '%s'" % clip)
+			push_error("GSAnimationPlayerView: AnimationPlayer has no clip '%s'" % clip)
 			return &""
 		var blend := machine.config.blend_time
 		player.play(clip, blend, float(pose["speed"]))
