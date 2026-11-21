@@ -6,4 +6,4 @@ Both are pure models. The caller supplies directions and ray results; the skelet
 - `DotAnimationFoot.step(rest_y, ground_y, hit, delta)` yields the smoothed foot offset, limited by `foot_max_reach`. `hip_drop(left, right)` is how far the hips lower.
 - `DotAnimationPlayerView` plays a machine's pose on an AnimationPlayer, only calling `play` when the clip changes.
 
-The locomotion layer in GameSpice Player Char (`DotPlayerAnimState`, hysteresis thresholds) is not moved here yet; it is specific to a character vocabulary.
+The locomotion state with its hysteresis thresholds lives here as `DotAnimationLocomotion`; GameSpice Player Char's `DotPlayerAnimState` extends it.

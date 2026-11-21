@@ -3,8 +3,8 @@ extends Node
 ## dot-animation's headless suite (res://examples/animation_selftest.tscn).
 ## Counts sections run to their last line as well as checks, because a script error aborts a section and not the run.
 
-const EXPECTED_SECTIONS := 8
-const EXPECTED_CHECKS := 70
+const EXPECTED_SECTIONS := 9
+const EXPECTED_CHECKS := 81
 
 var _passed := 0
 var _failed := 0
@@ -22,6 +22,7 @@ func _ready() -> void:
 	_notifies()
 	_aim()
 	_foot()
+	_locomotion()
 	print("")
 	_check(_sections == EXPECTED_SECTIONS, "every section ran to its last line (%d of %d)" % [_sections, EXPECTED_SECTIONS])
 	_check(_passed + _failed == EXPECTED_CHECKS, "and the suite ran all %d of its checks (%d)" % [EXPECTED_CHECKS, _passed + _failed])
@@ -277,4 +278,23 @@ func _foot() -> void:
 	_check(got == &"run_loop" and ap.current_animation == "run_loop", "and switches when the machine does")
 	ap.free()
 	v.free()
+	_sections += 1
+
+
+func _locomotion() -> void:
+	var m := DotAnimationLocomotion.new()
+	_check(m.validate().ok and m.state() == DotAnimationLocomotion.IDLE, "locomotion starts idle with valid thresholds")
+	_check(m.advance({"speed": 1.0}, 0.016) == DotAnimationLocomotion.WALK, "a slow speed is a walk")
+	_check(m.advance({"speed": 8.0}, 0.016) == DotAnimationLocomotion.RUN, "a fast one is a run")
+	_check(m.advance({"speed": 3.7}, 0.016) == DotAnimationLocomotion.RUN, "between the exit and the enter threshold a run stays a run")
+	_check(m.advance({"speed": 3.0}, 0.016) == DotAnimationLocomotion.WALK, "and below the exit threshold it drops to a walk")
+	_check(m.advance({"speed": 3.7}, 0.016) == DotAnimationLocomotion.WALK, "the same speed does not re-enter the run: hysteresis, no flicker")
+	_check(m.advance({"speed": 0.15}, 0.016) == DotAnimationLocomotion.WALK and m.advance({"speed": 0.05}, 0.016) == DotAnimationLocomotion.IDLE, "a walk holds down to its exit speed, then stands")
+	_check(m.advance({"crouched": true, "speed": 2.0}, 0.016) == DotAnimationLocomotion.CROUCH_WALK, "crouching has its own walk")
+	var air := {"on_floor": false, "vertical": -5.0}
+	var _a := m.advance(air, 0.01)
+	_check(m.advance(air, 0.2) == DotAnimationLocomotion.FALL, "off the ground past the grace is a fall")
+	_check(m.advance({"alive": false}, 0.016) == DotAnimationLocomotion.DEAD, "dead overrides everything")
+	m.run_exit_speed = m.run_speed
+	_check(not m.validate().ok, "no gap between the run thresholds fails loudly")
 	_sections += 1
