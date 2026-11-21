@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="dot-animation"
-config/description="Animation state machines declared as data, blend and layer rules and clip notifies. Depends only on dot-core."
+config/name="gs-animation"
+config/description="Animation state machines declared as data, blend and layer rules and clip notifies. Depends only on gs-core."
 run/main_scene="res://examples/animation_selftest.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
@@ -23,7 +23,7 @@ window/size/viewport_height=900
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dot_animation/plugin.cfg")
+enabled=PackedStringArray("res://addons/gs_animation/plugin.cfg")
 
 [importer_defaults]
 

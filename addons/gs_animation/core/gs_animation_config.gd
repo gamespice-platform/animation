@@ -1,9 +1,9 @@
 class_name GSAnimationConfig
 extends GSConfig
 
-## Every tunable of GameSpice Animation. A game binds it with GSGameConfigBinder (kind `animation`); `cfg/addon/dot_animation/*.yml`, `DOT_ANIMATION_*` and `--animation-*` layer over these defaults. Ranges are inspector slider limits, not caps.
+## Every tunable of GameSpice Animation. A game binds it with GSGameConfigBinder (kind `animation`); `cfg/addon/gs_animation/*.yml`, `GS_ANIMATION_*` and `--animation-*` layer over these defaults. Ranges are inspector slider limits, not caps.
 
-const ADDON := "dot-animation"
+const ADDON := "gs-animation"
 
 ## Master switch: off, a machine stays in its initial state and reports no changes.
 @export var enabled: bool = true
@@ -27,7 +27,7 @@ const ADDON := "dot-animation"
 @export_range(0.0, 2.0, 0.01) var foot_max_reach: float = 0.5
 
 func env_prefix() -> String:
-	return "DOT_ANIMATION_"
+	return "GS_ANIMATION_"
 
 
 func cli_prefix() -> String:
@@ -41,7 +41,7 @@ func validate() -> GSResult:
 	return GSResult.success(self)
 
 
-## Defaults, then `cfg/addon/dot_animation/*.yml` and the game tier, then environment and command line.
+## Defaults, then `cfg/addon/gs_animation/*.yml` and the game tier, then environment and command line.
 static func from_files() -> GSResult:
 	var cfg := GSAnimationConfig.new()
 	var files := GSAddonConfig.load_dir(ADDON)

@@ -4,10 +4,10 @@ Godot 4.7+ addon for animation: state machines declared as data, blend and layer
 
 ## Install
 
-1. Copy `addons/dot_animation/` and `addons/dot_core/` into your project.
+1. Copy `addons/gs_animation/` and `addons/gs_core/` into your project.
 2. Enable the addon in *Project > Project Settings > Plugins*.
 
-It needs only GameSpice Core ([dot_core](https://github.com/gamespice-platform/core)).
+It needs only GameSpice Core ([gs_core](https://github.com/gamespice-platform/core)).
 
 ## Quick start
 
@@ -34,7 +34,7 @@ var hits := notifies.fire(&"run", prev_time, now_time, looped)   # footstep and 
 
 ## Settings
 
-Every number is a field on `GSAnimationConfig`. The values below are defaults, and the ranges are inspector slider limits, not enforced caps. Set the property from code or a config file (`cfg/addon/dot_animation/animation.yml`, `DOT_ANIMATION_*`, `--animation-*`) to go beyond them. A bad value fails loudly in `validate()`.
+Every number is a field on `GSAnimationConfig`. The values below are defaults, and the ranges are inspector slider limits, not enforced caps. Set the property from code or a config file (`cfg/addon/gs_animation/animation.yml`, `GS_ANIMATION_*`, `--animation-*`) to go beyond them. A bad value fails loudly in `validate()`.
 
 | Setting | Default | What it does |
 | --- | --- | --- |

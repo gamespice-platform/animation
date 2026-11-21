@@ -1,6 +1,6 @@
 extends Node
 
-## dot-animation's headless suite (res://examples/animation_selftest.tscn).
+## gs-animation's headless suite (res://examples/animation_selftest.tscn).
 ## Counts sections run to their last line as well as checks, because a script error aborts a section and not the run.
 
 const EXPECTED_SECTIONS := 9
@@ -13,7 +13,7 @@ var _changes: Array = []
 
 
 func _ready() -> void:
-	print("dot-animation")
+	print("gs-animation")
 	_config()
 	_graph()
 	_machine()
@@ -72,7 +72,7 @@ func _config() -> void:
 	_check(c.validate().ok, "blend_time 0 and max_step 0 (no limit) are valid")
 	var applied := c.apply_dictionary({"blend_time": 0.4, "speed_scale": 2.0, "enabled": false})
 	_check(applied.size() == 3 and c.blend_time == 0.4 and c.speed_scale == 2.0 and not c.enabled, "a dictionary layer sets every type", str(applied))
-	_check(c.env_prefix() == "DOT_ANIMATION_" and c.cli_prefix() == "--animation-", "env and command-line prefixes")
+	_check(c.env_prefix() == "GS_ANIMATION_" and c.cli_prefix() == "--animation-", "env and command-line prefixes")
 	var r := GSAnimationConfig.from_files()
 	_check(r.ok and (r.value as GSAnimationConfig).describe().begins_with("animation"), "from_files returns a config that describes itself")
 	_sections += 1
