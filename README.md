@@ -43,6 +43,14 @@ Every number is a field on `DotAnimationConfig`. The values below are defaults, 
 | `trigger_seconds` | 0.3 | Seconds a trigger waits to be consumed before it is dropped; 0 keeps it until used. |
 | `speed_scale` | 1.0 | Playback rate for every state; 1 is as authored. |
 | `max_step` | 0.1 | Largest delta a machine takes in one tick, so a hitch does not skip a whole state; 0 is no limit. |
+| `aim_max_yaw` | 80 | Most a body turns to aim, degrees either side; 0 is no limit. |
+| `aim_max_pitch` | 70 | Most a body pitches to aim, degrees; 0 is no limit. |
+| `ik_half_life` | 0.05 | Seconds for an aim or foot target to cover half the way; 0 snaps. |
+| `foot_max_reach` | 0.5 | Farthest a foot reaches for ground, metres; 0 is no limit. |
+
+## Aim, feet and playing
+
+`DotAnimationAim` clamps and smooths a look into yaw and pitch and spreads it over a bone chain; `DotAnimationFoot` turns a ground hit into a smoothed foot offset and the hip drop; `DotAnimationPlayerView` applies a machine's pose to an AnimationPlayer, calling `play` only when the clip changes. See `docs/ik.md`.
 
 ## What it is not
 

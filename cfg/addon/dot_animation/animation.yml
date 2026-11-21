@@ -1,1 +1,5 @@
 # Shipped defaults are in DotAnimationConfig; a key here overrides one.
+# aim_max_yaw: 80
+# aim_max_pitch: 70
+# ik_half_life: 0.05
+# foot_max_reach: 0.5   # 0 = unlimited

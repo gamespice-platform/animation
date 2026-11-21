@@ -17,6 +17,15 @@ const ADDON := "dot-animation"
 @export_range(0.0, 1.0, 0.01) var max_step: float = 0.1
 
 
+## Most a body turns to aim, in degrees either side of forward; 0 is no limit.
+@export_range(0.0, 180.0, 1.0) var aim_max_yaw: float = 80.0
+## Most a body pitches to aim, in degrees up or down; 0 is no limit.
+@export_range(0.0, 90.0, 1.0) var aim_max_pitch: float = 70.0
+## Seconds for an aim or foot target to cover half the way to where it was asked to be; 0 snaps.
+@export_range(0.0, 1.0, 0.01) var ik_half_life: float = 0.05
+## Farthest a foot reaches below its rest height to find ground, in metres; 0 is no limit.
+@export_range(0.0, 2.0, 0.01) var foot_max_reach: float = 0.5
+
 func env_prefix() -> String:
 	return "DOT_ANIMATION_"
 
@@ -26,7 +35,7 @@ func cli_prefix() -> String:
 
 
 func validate() -> DotResult:
-	for pair: Array in [["blend_time", blend_time], ["trigger_seconds", trigger_seconds], ["speed_scale", speed_scale], ["max_step", max_step]]:
+	for pair: Array in [["blend_time", blend_time], ["trigger_seconds", trigger_seconds], ["speed_scale", speed_scale], ["max_step", max_step], ["aim_max_yaw", aim_max_yaw], ["aim_max_pitch", aim_max_pitch], ["ik_half_life", ik_half_life], ["foot_max_reach", foot_max_reach]]:
 		if float(pair[1]) < 0.0:
 			return DotResult.fail(DotError.CODE_INVALID, "animation %s %s is negative" % [pair[0], pair[1]])
 	return DotResult.success(self)

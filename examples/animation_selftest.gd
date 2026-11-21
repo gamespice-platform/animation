@@ -3,8 +3,8 @@ extends Node
 ## dot-animation's headless suite (res://examples/animation_selftest.tscn).
 ## Counts sections run to their last line as well as checks, because a script error aborts a section and not the run.
 
-const EXPECTED_SECTIONS := 6
-const EXPECTED_CHECKS := 53
+const EXPECTED_SECTIONS := 8
+const EXPECTED_CHECKS := 70
 
 var _passed := 0
 var _failed := 0
@@ -20,6 +20,8 @@ func _ready() -> void:
 	_triggers()
 	_blend()
 	_notifies()
+	_aim()
+	_foot()
 	print("")
 	_check(_sections == EXPECTED_SECTIONS, "every section ran to its last line (%d of %d)" % [_sections, EXPECTED_SECTIONS])
 	_check(_passed + _failed == EXPECTED_CHECKS, "and the suite ran all %d of its checks (%d)" % [EXPECTED_CHECKS, _passed + _failed])
@@ -217,3 +219,62 @@ func _check(ok: bool, what: String, extra: String = "") -> void:
 	else:
 		_failed += 1
 		print("  FAIL  ", what, "  ", extra)
+
+
+func _aim() -> void:
+	var c := DotAnimationConfig.new()
+	var aim := DotAnimationAim.new(c)
+	var a := DotAnimationAim.angles_to(Vector3(0, 0, 1), Vector3(1, 0, 1))
+	_check(is_equal_approx(a.x, PI / 4.0) and is_zero_approx(a.y), "angles_to gives the yaw of a diagonal look")
+	_check(DotAnimationAim.angles_to(Vector3.ZERO, Vector3.ONE) == Vector2.ZERO, "a zero vector gives zero angles")
+	_check(DotAnimationAim.angles_to(Vector3(0, 0, 1), Vector3(0, 1, 1)).y > 0.0, "looking up gives positive pitch")
+	c.ik_half_life = 0.0
+	var r := aim.step(Vector2(PI, 1.5), 0.016)
+	_check(is_equal_approx(r.x, deg_to_rad(80.0)) and is_equal_approx(r.y, deg_to_rad(70.0)), "aim is clamped to the config limits")
+	c.aim_max_yaw = 0.0
+	_check(is_equal_approx(aim.step(Vector2(PI, 0), 0.016).x, PI), "aim_max_yaw 0 means no limit")
+	c.ik_half_life = 0.1
+	aim.reset()
+	var half := aim.step(Vector2(1.0, 0.0), 0.1)
+	_check(is_equal_approx(half.x, 0.5), "one half-life covers half the way")
+	var out := PackedVector2Array()
+	aim.distribute(PackedFloat32Array([1.0, 3.0]), out)
+	_check(out.size() == 2 and is_equal_approx(out[1].x, half.x * 0.75), "distribute splits by relative weight")
+	aim.distribute(PackedFloat32Array([0.0, 0.0]), out)
+	_check(out[0] == Vector2.ZERO, "all-zero weights give nothing rather than NaN")
+	c.aim_max_pitch = -1.0
+	_check(not c.validate().ok, "a negative aim limit is refused")
+	_sections += 1
+
+
+func _foot() -> void:
+	var c := DotAnimationConfig.new()
+	c.ik_half_life = 0.0
+	var f := DotAnimationFoot.new(c)
+	_check(is_equal_approx(f.step(0.0, -0.2, true, 0.016), -0.2), "the foot reaches ground below it")
+	_check(is_equal_approx(f.step(0.0, -5.0, true, 0.016), -0.5), "reach is limited by foot_max_reach")
+	c.foot_max_reach = 0.0
+	_check(is_equal_approx(f.step(0.0, -5.0, true, 0.016), -5.0), "foot_max_reach 0 is unlimited")
+	_check(is_zero_approx(f.step(0.0, -5.0, false, 0.016)), "no ground found eases back to the animation")
+	_check(is_equal_approx(DotAnimationFoot.hip_drop(-0.1, 0.2), -0.1) and DotAnimationFoot.hip_drop(0.1, 0.2) == 0.0, "hips drop for the lower foot only")
+	c.ik_half_life = 0.1
+	f.reset()
+	_check(is_equal_approx(f.step(0.0, 1.0, true, 0.1), 0.5), "smoothing halves the gap per half-life")
+	var ap := AnimationPlayer.new()
+	var lib := AnimationLibrary.new()
+	lib.add_animation(&"idle_loop", Animation.new())
+	lib.add_animation(&"run_loop", Animation.new())
+	ap.add_animation_library(&"", lib)
+	add_child(ap)
+	var cfg := DotAnimationConfig.new()
+	var g := DotAnimationGraph.from_dictionary(_doc()).value as DotAnimationGraph
+	var m := DotAnimationMachine.new(g, cfg)
+	var v := DotAnimationPlayerView.new()
+	v.setup(ap, m)
+	_check(v.drive({"speed": 0.0, "alive": true}, 0.016) == &"idle_loop", "the view plays the initial clip")
+	v.drive({"speed": 3.0, "alive": true}, 0.1)
+	var got := v.drive({"speed": 3.0, "alive": true}, 0.1)
+	_check(got == &"run_loop" and ap.current_animation == "run_loop", "and switches when the machine does")
+	ap.free()
+	v.free()
+	_sections += 1
