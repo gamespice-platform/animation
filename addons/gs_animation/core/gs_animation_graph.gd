@@ -2,15 +2,8 @@ class_name GSAnimationGraph
 extends RefCounted
 
 ## A state machine declared as data, validated once so a machine never meets a dangling state.
-##
-## ```
-## {"initial": "idle",
-##  "states": {"idle": {"clip": "idle", "loop": true, "min_time": 0.0},
-##             "run": {"clip": "run", "speed": 1.0}},
-##  "transitions": [{"from": "idle", "to": "run", "when": [["speed", ">", 0.5]], "priority": 1, "blend": 0.1},
-##                  {"from": "*", "to": "idle", "when": [["alive", "false"]], "interrupt": true}]}
-## ```
-## A condition is `[param, op, value]` (`>`, `<`, `>=`, `<=`, `==`, `!=`), `[param, "true"]`, `[param, "false"]` or `[param, "trigger"]`. All conditions of a transition must hold. `from: "*"` matches every state. The graph knows nothing about a rig; clip names are strings the game resolves.
+## Shape: `{"initial", "states": {name: {clip, loop, speed, min_time}}, "transitions": [{from, to, when, priority, blend, interrupt}]}`.
+## A condition is `[param, op, value]` or `[param, "true"|"false"|"trigger"]`; `from: "*"` matches every state. Clip names are strings the game resolves.
 
 const OPS: PackedStringArray = [">", "<", ">=", "<=", "==", "!=", "true", "false", "trigger"]
 const ANY := "*"
