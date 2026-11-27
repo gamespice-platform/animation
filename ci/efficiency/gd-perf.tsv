@@ -1,0 +1,22 @@
+# gd-perf
+# Baselines only shrink: scripts/<gate> --update lowers or drops entries and refuses to add.
+addons/gs_animation/core/gs_animation_blend.gd::blend_1d::alloc	7
+addons/gs_animation/core/gs_animation_blend.gd::blend_1d::untyped_array	5
+addons/gs_animation/core/gs_animation_blend.gd::check_points::untyped_array	1
+addons/gs_animation/core/gs_animation_blend.gd::layer::alloc	1
+addons/gs_animation/core/gs_animation_blend.gd::layer::untyped_array	2
+addons/gs_animation/core/gs_animation_graph.gd::<members>::untyped_array	2
+addons/gs_animation/core/gs_animation_graph.gd::from_dictionary::untyped_array	5
+addons/gs_animation/core/gs_animation_graph.gd::holds::untyped_array	1
+addons/gs_animation/core/gs_animation_graph.gd::transitions_from::untyped_array	2
+addons/gs_animation/core/gs_animation_locomotion.gd::advance::untyped_array	1
+addons/gs_animation/core/gs_animation_machine.gd::<members>::untyped_array	1
+addons/gs_animation/core/gs_animation_machine.gd::_passes::untyped_array	1
+addons/gs_animation/core/gs_animation_machine.gd::_take::untyped_array	1
+addons/gs_animation/core/gs_animation_machine.gd::pose::alloc	1
+addons/gs_animation/core/gs_animation_machine.gd::pose::untyped_array	2
+addons/gs_animation/core/gs_animation_machine.gd::tick::untyped_array	2
+addons/gs_animation/core/gs_animation_notifies.gd::<members>::untyped_array	1
+addons/gs_animation/core/gs_animation_notifies.gd::add::untyped_array	1
+addons/gs_animation/core/gs_animation_notifies.gd::fire::alloc	1
+addons/gs_animation/runtime/gs_animation_player_view.gd::drive::untyped_array	1

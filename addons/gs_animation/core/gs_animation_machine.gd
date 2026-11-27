@@ -77,6 +77,16 @@ func blend_weight() -> float:
 
 
 ## What to play: `{clip, from_clip, weight, speed, loop}`; `from_clip` is empty when no blend is running.
+## The current state's clip, for per-frame drivers ([method pose] builds a dictionary).
+func clip() -> StringName:
+	return (graph.states[current] as Dictionary)["clip"]
+
+
+## The current state's playback speed including [member GSAnimationConfig.speed_scale].
+func speed() -> float:
+	return float((graph.states[current] as Dictionary)["speed"]) * config.speed_scale
+
+
 func pose() -> Dictionary:
 	var s: Dictionary = graph.states[current]
 	var blending := _blend_t < 1.0 and previous != &""

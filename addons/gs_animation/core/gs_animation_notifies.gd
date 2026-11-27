@@ -3,6 +3,8 @@ extends RefCounted
 
 ## Events pinned to a clip's normalised time (footstep, hit frame, reload done), fired once as playback passes them, loops included.
 
+const _NONE: Array = []
+
 var _events: Dictionary = {}
 
 
@@ -18,13 +20,13 @@ func add(clip: StringName, time: float, name: StringName) -> GSResult:
 
 
 func count(clip: StringName) -> int:
-	return (_events.get(clip, []) as Array).size()
+	return (_events.get(clip, _NONE) as Array).size()
 
 
 ## Names passed when playback goes from `prev` to `now`. A normal step covers (prev, now]; with `wrapped` the clip looped, covering (prev, 1] and [0, now].
 func fire(clip: StringName, prev: float, now: float, wrapped: bool = false) -> Array[StringName]:
 	var out: Array[StringName] = []
-	for e: Dictionary in (_events.get(clip, []) as Array):
+	for e: Dictionary in (_events.get(clip, _NONE) as Array):
 		var t := float(e["t"])
 		var hit := (t > prev or t <= now) if wrapped else (t > prev and t <= now)
 		if hit:

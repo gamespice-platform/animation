@@ -9,18 +9,18 @@ static func blend_1d(points: Array, value: float) -> Dictionary:
 	if points.is_empty():
 		return {}
 	if value <= float((points[0] as Array)[0]):
-		return {StringName(str((points[0] as Array)[1])): 1.0}
+		return {StringName((points[0] as Array)[1]): 1.0}
 	var last: Array = points[points.size() - 1]
 	if value >= float(last[0]):
-		return {StringName(str(last[1])): 1.0}
+		return {StringName(last[1]): 1.0}
 	for i in points.size() - 1:
 		var a: Array = points[i]
 		var b: Array = points[i + 1]
 		if value >= float(a[0]) and value <= float(b[0]):
 			var t := (value - float(a[0])) / (float(b[0]) - float(a[0]))
 			var out: Dictionary = {}
-			out[StringName(str(a[1]))] = 1.0 - t
-			out[StringName(str(b[1]))] = float(out.get(StringName(str(b[1])), 0.0)) + t
+			out[StringName(a[1])] = 1.0 - t
+			out[StringName(b[1])] = float(out.get(StringName(b[1]), 0.0)) + t
 			return out
 	return {}
 

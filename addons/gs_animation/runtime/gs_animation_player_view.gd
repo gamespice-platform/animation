@@ -19,15 +19,15 @@ func setup(p_player: AnimationPlayer, p_machine: GSAnimationMachine) -> void:
 ## Ticks the machine with [param params], then plays its clip if it changed. Returns the clip now playing (empty if the player lacks it, which also pushes an error naming the clip).
 func drive(params: Dictionary, delta: float) -> StringName:
 	machine.tick(params, delta)
-	var pose := machine.pose()
-	var clip: StringName = pose["clip"]
+	var clip := machine.clip()
+	var speed := machine.speed()
 	if clip != _clip:
 		if not player.has_animation(clip):
-			push_error("GSAnimationPlayerView: AnimationPlayer has no clip '%s'" % clip)
+			push_error("GSAnimationPlayerView: AnimationPlayer has no clip '%s'" % clip)  # perf-lint: allow string_build error path only
 			return &""
 		var blend := machine.config.blend_time
-		player.play(clip, blend, float(pose["speed"]))
+		player.play(clip, blend, speed)
 		_clip = clip
 		clip_changed.emit(clip)
-	player.speed_scale = float(pose["speed"])
+	player.speed_scale = speed
 	return _clip
